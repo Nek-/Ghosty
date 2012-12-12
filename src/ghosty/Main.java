@@ -1,3 +1,4 @@
+package ghosty;
 
 import javax.swing.SwingUtilities;
 

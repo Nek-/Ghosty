@@ -1,3 +1,4 @@
+package ghosty;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,9 +24,6 @@ public class GhostyWindow extends JFrame {
 	this.build();
 	
     
-    JFileChooser fileChooser = new JFileChooser();
-    
-    this.add(fileChooser);
     
 	
     // Pack all layouts and components
@@ -61,7 +59,7 @@ public class GhostyWindow extends JFrame {
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setDialogTitle("Choissez un fichier");
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					System.out.println("getCurrentDirectory(): "
 							+ fileChooser.getCurrentDirectory());
 					System.out.println("getSelectedFile() : "
@@ -71,6 +69,8 @@ public class GhostyWindow extends JFrame {
 				}
 			}
 		});
+	    
+	    this.add(chooseAFile);
 	}
 
 }
