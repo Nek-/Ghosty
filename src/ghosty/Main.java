@@ -17,6 +17,8 @@ public class Main {
 	    		GhostyWindow W = new GhostyWindow();
 	    	}
     	});
+	    
+	    // Time for tests
 	}
 
 }
