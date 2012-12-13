@@ -1,5 +1,7 @@
 package ghosty.config;
 
+import ghosty.config.loader.BaseConfigLoader;
+
 import java.util.HashMap;
 
 public class Manager {
@@ -12,7 +14,7 @@ public class Manager {
 	/**
 	 * Help for loading the configuration from the file
 	 */
-	private Loader loader;
+	private BaseConfigLoader loader;
 	
 	/**
 	 * Store all the configuration
@@ -26,7 +28,7 @@ public class Manager {
 	 */
 	public Manager(String path) {
 		this.configDir = path;
-		this.loader = new Loader();
+		this.loader = new BaseConfigLoader();
 		
 		if (this.exists())
 			this.load();

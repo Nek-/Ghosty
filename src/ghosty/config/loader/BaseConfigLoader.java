@@ -1,8 +1,8 @@
-package ghosty.config;
+package ghosty.config.loader;
 
 import java.util.HashMap;
 
-public class Loader {
+public class BaseConfigLoader {
 	
 	/**
 	 * Load a file configuration to set it in a hashmap
