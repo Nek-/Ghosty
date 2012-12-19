@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -44,5 +46,18 @@ public class File {
 		byte[] array = Files.readAllBytes(FileSystems.getDefault().getPath(this.path));
 
 		return array;
+	}
+	
+	/**
+	 * Return the complete file as InputStream
+	 * 
+	 * @return
+	 * @throws IOException 
+	 */
+	
+	public InputStream getInputStream() throws IOException{
+		Path p = Paths.get(this.path);
+		InputStream in = Files.newInputStream(p);
+		return in;	
 	}
 }
