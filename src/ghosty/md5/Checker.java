@@ -1,6 +1,7 @@
 package ghosty.md5;
 
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import ghosty.config.ConfigFactory;
 import ghosty.config.Configuration;
 import ghosty.config.MissingConfigurationException;
+import ghosty.config.loader.LoadException;
+import ghosty.files.FileFactory;
 
 /**
  * Load a file and check
@@ -23,19 +26,24 @@ public class Checker {
 	 * @param files
 	 * @param configDir
 	 * @return String[] paths of files who change
+	 * @throws LoadException 
+	 * @throws CheckException 
 	 */
-	public static String[] check(String[] files, ConfigFactory factory) {
+	public static String[] check(String[] files, ConfigFactory factory) throws LoadException, CheckException {
 		ArrayList<String> changed = new ArrayList<String>();
 		Configuration config = factory.getConfiguration(configFilename);
 		String hash;
 		String newHash;
-		
+
 		for(int i=0; i < files.length; i++) {
 			try {
 				hash = config.get(files[i]);
 				
-				// TODO get from the file
-				newHash = hash(files[i].getBytes());
+				try {
+					newHash = hash(FileFactory.getInstance().getFile(files[i]).getBytes());
+				} catch (IOException e) {
+					throw new CheckException("Impossible to load the file \"" + files[i] + "\"");
+				}
 				
 				if(hash != newHash) {
 					changed.add(files[i]);
