@@ -2,6 +2,7 @@ package ghosty.files;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -54,10 +55,21 @@ public class File {
 	 * @return
 	 * @throws IOException 
 	 */
-	
 	public InputStream getInputStream() throws IOException{
 		Path p = Paths.get(this.path);
 		InputStream in = Files.newInputStream(p);
 		return in;	
+	}
+
+	/**
+	 * Return the complete file as InputStream
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public OutputStream getOutputStream() throws IOException{
+		Path p = Paths.get(this.path);
+		OutputStream out = Files.newOutputStream(p);
+		return out;
 	}
 }
