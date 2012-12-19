@@ -1,5 +1,8 @@
 package ghosty;
 
+import ghosty.config.loader.LoadException;
+import ghosty.config.loader.XmlConfigLoader;
+import ghosty.config.utils.ConfigMapList;
 import ghosty.utils.ParametersManager;
 
 import javax.swing.SwingUtilities;
@@ -20,8 +23,24 @@ public class Main {
 			Main.loadShell();
 		}
 	    
+		
+		Main.testLoader();
+		
 	}
 	
+	private static void testLoader() {
+		XmlConfigLoader loader = new XmlConfigLoader();
+		ConfigMapList cml;
+		try {
+			cml = loader.load("/home/nek/lol.xml");
+			System.out.println(cml);
+		} catch (LoadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 	public static void loadGui() {
 
 	    // We must call the window later to avoid problems with events

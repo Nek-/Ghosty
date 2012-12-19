@@ -105,4 +105,19 @@ public class ConfigMapList implements Iterable {
 	public int size() {
 		return this.keys.size();
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		int c = this.keys.size();
+		for (int i = 0; i < c; i++) {
+			sb.append(this.keys.get(i))
+				.append(" : ")
+				.append(this.values.get(i))
+				.append('\n');
+		}
+		
+		return sb.toString();
+	}
 }

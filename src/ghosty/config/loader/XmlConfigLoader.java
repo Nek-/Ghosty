@@ -2,6 +2,7 @@ package ghosty.config.loader;
 
 import ghosty.config.utils.ConfigMapList;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -32,12 +33,13 @@ public class XmlConfigLoader implements ConfigLoaderInterface {
 		ConfigMapList res = new ConfigMapList();
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
+		DocumentBuilder docBuilder;
 		
 		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			InputStream fXmlFile = null;
-			Document doc = dBuilder.parse(fXmlFile);
+			docBuilder = dbFactory.newDocumentBuilder();
+
+			Document doc = docBuilder.parse(path);
+			
 			
 			doc.getDocumentElement().normalize();
 			NodeList options = doc.getDocumentElement().getElementsByTagName("option");
@@ -56,12 +58,15 @@ public class XmlConfigLoader implements ConfigLoaderInterface {
 				}
 			}
 			
+		} catch (IOException e) {
+			// Nothing to do, the file doesn't exists but it's not a problem
+			System.out.println("The configuration file doesn't exists.");
 		} catch (Exception e) {
 			throw new LoadException(path);
 		}
 		
 		
-		return null;
+		return res;
 	}
 	
 	/**
