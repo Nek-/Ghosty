@@ -1,15 +1,52 @@
 package ghosty.config.loader;
 
 import java.util.HashMap;
+import java.util.Scanner;
 
-public class BaseConfigLoader {
+/**
+ * This loader load configuration files formatted like that:
+ * key: value
+ * if there is a second ":" in the line, it will be ignored
+ *
+ */
+public class BaseConfigLoader implements ConfigLoaderInterface {
 	
 	/**
-	 * Load a file configuration to set it in a hashmap
+	 * Load a file configuration to set it in a HashMap
+	 * 
 	 * @param path
 	 * @return
 	 */
 	public HashMap<String, String> load(String path) {
-		return new HashMap<String, String>();
+		// Should be load from a file
+		String config = "";
+		HashMap<String, String> res = new HashMap<String, String>();
+		
+		Scanner sc = new Scanner(config);
+		String[] tmp;
+		
+		while(sc.hasNextLine()) {
+			tmp = this.parseLine(sc.nextLine());
+			
+			res.put(tmp[0], tmp[1]);
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Parse a line of configuration
+	 * 
+	 * @param s
+	 * @return
+	 */
+	private String[] parseLine(String s) {
+		String[] res = s.split(":", 2);
+		
+		for (int i = 0; i < 2; i++) {
+			res[i].trim();
+		}
+		
+		return res;
 	}
 }
