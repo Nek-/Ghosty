@@ -30,17 +30,13 @@ public class XmlConfigSaver implements ConfigSaverInterface {
 			docBuilder = dbFactory.newDocumentBuilder();
 			Document doc;
 			
-			try {
-				doc = docBuilder.parse(path);
-			} catch (IOException e) {
-				doc = docBuilder.newDocument();
-			}
+			doc = docBuilder.newDocument();
 			
 			ConfigMapListIterator i = (ConfigMapListIterator) config.iterator();
 			
 			Element rootNode = doc.createElement("configuration");
 			doc.appendChild(rootNode);
-			
+
 			while (i.hasNext()) {
 				Element option = doc.createElement("option");
 				
@@ -52,15 +48,22 @@ public class XmlConfigSaver implements ConfigSaverInterface {
 				
 				option.appendChild(key);
 				option.appendChild(value);
+				
 			}
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(FileFactory.getInstance().getFile(path).getOutputStream());
+			//StreamResult result = new StreamResult(FileFactory.getInstance().getFile(path).getOutputStream());
+			
+			// Testing
+			StreamResult result = new StreamResult(System.out);
+			
+			//transformer.transform(source, result);
 			
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new SaveException("Impossible to save the configuration in file \"" + path + "\"");
 		}
 
