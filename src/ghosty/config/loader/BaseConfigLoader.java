@@ -1,5 +1,7 @@
 package ghosty.config.loader;
 
+import ghosty.config.utils.ConfigMapList;
+
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -17,10 +19,10 @@ public class BaseConfigLoader implements ConfigLoaderInterface {
 	 * @param path
 	 * @return
 	 */
-	public HashMap<String, String> load(String path) {
+	public ConfigMapList load(String path) {
 		// Should be load from a file
 		String config = "";
-		HashMap<String, String> res = new HashMap<String, String>();
+		ConfigMapList res = new ConfigMapList();
 		
 		Scanner sc = new Scanner(config);
 		String[] tmp;

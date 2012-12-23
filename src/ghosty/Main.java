@@ -24,22 +24,8 @@ public class Main {
 		}
 	    
 		
-		Main.testLoader();
-		
 	}
 	
-	private static void testLoader() {
-		XmlConfigLoader loader = new XmlConfigLoader();
-		ConfigMapList cml;
-		try {
-			cml = loader.load("/home/nek/lol.xml");
-			System.out.println(cml);
-		} catch (LoadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 
 	public static void loadGui() {
 
