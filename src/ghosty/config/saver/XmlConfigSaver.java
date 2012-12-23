@@ -49,17 +49,19 @@ public class XmlConfigSaver implements ConfigSaverInterface {
 				option.appendChild(key);
 				option.appendChild(value);
 				
+				rootNode.appendChild(option);
+				
 			}
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			//StreamResult result = new StreamResult(FileFactory.getInstance().getFile(path).getOutputStream());
+			StreamResult result = new StreamResult(FileFactory.getInstance().getFile(path).getOutputStream());
 			
 			// Testing
-			StreamResult result = new StreamResult(System.out);
+			//StreamResult result = new StreamResult(System.out);
 			
-			//transformer.transform(source, result);
+			transformer.transform(source, result);
 			
 			
 		} catch (Exception e) {
