@@ -51,9 +51,10 @@ public class Manager {
 		
 		return array;
 	}
-	
+	/*
 	public LinkedList readFile ( Path path){
 		
 	}
+	//*/
 	
 }
