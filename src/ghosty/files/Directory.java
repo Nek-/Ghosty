@@ -22,7 +22,7 @@ public class Directory {
 	}
 	
 
-	public static void testCreateDirectory(String directory) {
+	public static void createDirectory(String directory) {
 		Path monRepertoire = Paths.get(directory);
 		try {
 			Path file = Files.createDirectory(monRepertoire);
