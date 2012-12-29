@@ -14,6 +14,8 @@ public class ConfigMapListIterator implements Iterator {
 	 */
 	private int currentIndex;
 	
+	private boolean more;
+	
 	public ConfigMapListIterator(ConfigMapList list) {
 		this.list 			= list;
 		this.currentIndex 	= -1;
@@ -21,18 +23,25 @@ public class ConfigMapListIterator implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		
+		this.more = true;
 		return this.list.size() > (this.currentIndex + 1);
 	}
 
 	@Override
 	public String next() {
-		this.currentIndex++;
+		this.goToNext();
 		return this.list.getValue(this.currentIndex);
+	}
+	
+	private void goToNext() {
+		if(this.more) {
+			this.currentIndex++;
+			this.more = false;
+		}
 	}
 
 	public String nextKey() {
-		this.currentIndex++;
+		this.goToNext();
 		return this.list.getKey(this.currentIndex);
 	}
 

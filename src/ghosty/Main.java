@@ -61,9 +61,8 @@ public class Main {
 		System.out.println("*        Welcome to Ghosty !      *");
 		System.out.println("***********************************");
 		
-		try {
-			Directory.testCreateDirectory(baseConfigDirectory);
-		} catch (Exception e) {}
+		
+		Directory.createDirectory(baseConfigDirectory);
 		String lastDirectory = null;
 		String directory = null;
 		try {
@@ -82,23 +81,19 @@ public class Main {
 
 
 				directory = in.nextLine();
-				
+
 				if(directory.equals("") && lastDirectory != null) {
 					directory = lastDirectory;
 				}
 
 			} while (directory == null);
 
-			baseConfig.set("lastDirectory", directory);
+			baseConfig.set("last_directory", directory);
 
-			System.out.println("Directory: " + directory);
-			System.out.println("Config : " + baseConfig.get("lastDirectory"));
 
 			baseConfig.save();
 
-		} catch (Exception e) {
-			System.out.println("Exception");
-		}
+		} catch (Exception e) {}
 
 
 		// If configuration missing or reconfigure enabled, we must load the configuration process

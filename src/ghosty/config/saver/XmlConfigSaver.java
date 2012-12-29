@@ -58,7 +58,7 @@ public class XmlConfigSaver implements ConfigSaverInterface {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(FileFactory.getInstance().getFile(path).getOutputStream());
 			
-			// Testing
+			// For Tests
 			//StreamResult result = new StreamResult(System.out);
 			
 			transformer.transform(source, result);
