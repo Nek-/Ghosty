@@ -54,20 +54,16 @@ public class Test {
     body.setMimeType(mimeType);
 
     // Set the parent folder.
-    if (parentId != null && parentId.length() > 0) {
-      body.setParents(
-          Arrays.asList(new ParentReference().setId(parentId)));
-    }
+  
 
     // File's content.
     Path fileContent = Paths.get(filename);
-    
     FileContent mediaContent = new FileContent(mimeType, fileContent.toFile());
     try {
       File file = service.files().insert(body, mediaContent).execute();
 
       // Uncomment the following line to print the File ID.
-      // System.out.println("File ID: %s" + file.getId());
+       System.out.println("File ID: %s" + file.getId());
 
       return file;
     } catch (IOException e) {
@@ -147,7 +143,7 @@ public class Test {
   
  
   
-  public static void main(String[] args) throws IOException{
+  public static void sendtoDrive(Path path) throws IOException{
 	    String CLIENT_ID = "992264517523.apps.googleusercontent.com";
 	    String CLIENT_SECRET = "mKIP4ka2grpm2t67oQQqa7GZ";
 	    String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
@@ -172,9 +168,13 @@ public class Test {
 	    //Create a new authorized API client
 	    Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
 	  
+	  insertAll(service,path);
 	  
-	  Path path = Paths.get("before_coding");
-	  
+  }
+  
+  
+  public static void insertAll(Drive service, Path path ) throws IOException{
+	 
 	  DirectoryStream<Path> stream = Files.newDirectoryStream(path);
 	  
 	  try {
@@ -185,12 +185,15 @@ public class Test {
 			  
 			  Path p = iterator.next();
 			 
-			  if ( Files.isDirectory(p)){
-				   System.out.println(p.getFileName().toString());
+			 if ( Files.isDirectory(p)){
 				   insertDirectory(service,  p.getFileName().toString(), "description", null,  "application/vnd.google-apps.folder", p.getFileName().toString());
+				   insertAll(service, p);
+			 }
+			  else {
+				  System.out.println(p);
+				  insertDirectory(service, p.getFileName().toString(), "description", null,Files.probeContentType(path), p.getFileName().toString());
 			  }
-			  else 
-				  insertFile(service, "title", "description", null,"text/plain", p.getFileName().toString());
+			
 		  }
 	 
 	  } finally {
@@ -198,6 +201,11 @@ public class Test {
 	  stream.close();
 	 
 	  }
-	  
   }
+  
+  public static void main(String[] args) throws IOException{
+	  Path path = Paths.get("before_coding");
+	  sendtoDrive(path);
+  }
+
 }
