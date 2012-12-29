@@ -21,8 +21,13 @@ public class Directory {
 		return new LinkedList<String>();
 	}
 	
+
 	public static void testCreateDirectory(String directory) throws IOException {
 		Path monRepertoire = Paths.get(directory);
 		Path file = Files.createDirectory(monRepertoire);
+	}
+	public  boolean exists(Path path){
+		 return this.exists(path);
+
 	}
 }
