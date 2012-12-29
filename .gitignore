@@ -1,5 +1,6 @@
+
 .settings
 .classpath
 bin/
-Test/bin
+Test/
 TestFolder

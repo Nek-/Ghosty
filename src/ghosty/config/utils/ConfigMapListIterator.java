@@ -16,13 +16,13 @@ public class ConfigMapListIterator implements Iterator {
 	
 	public ConfigMapListIterator(ConfigMapList list) {
 		this.list 			= list;
-		this.currentIndex 	= 0;
+		this.currentIndex 	= -1;
 	}
 
 	@Override
 	public boolean hasNext() {
 		
-		return (list.size() - 1) < this.currentIndex;
+		return this.list.size() > (this.currentIndex + 1);
 	}
 
 	@Override
