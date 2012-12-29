@@ -22,10 +22,13 @@ public class Directory {
 	}
 	
 
-	public static void testCreateDirectory(String directory) throws IOException {
+	public static void testCreateDirectory(String directory) {
 		Path monRepertoire = Paths.get(directory);
-		Path file = Files.createDirectory(monRepertoire);
+		try {
+			Path file = Files.createDirectory(monRepertoire);
+		} catch (IOException e) {}
 	}
+	
 	public  boolean exists(Path path){
 		 return this.exists(path);
 
