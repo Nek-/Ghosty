@@ -73,6 +73,19 @@ public class Test {
   }
   
   
+  private static ParentReference insertFileIntoFolder(Drive service, String folderId,
+	      String fileId) {
+	    ParentReference newParent = new ParentReference();
+	    newParent.setId(folderId);
+	    try {
+	      return service.parents().insert(fileId, newParent).execute();
+	    } catch (IOException e) {
+	      System.out.println("An error occurred: " + e);
+	    }
+	    return null;
+	  }
+
+  
   private static File insertDirectory(Drive service, String title, String description,
 	      String parentId, String mimeType, String filename) {
 	    // File's metadata.
