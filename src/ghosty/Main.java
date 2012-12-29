@@ -1,13 +1,8 @@
 package ghosty;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import ghosty.config.Configuration;
-import ghosty.config.MissingConfigurationException;
-import ghosty.config.loader.LoadException;
-import ghosty.config.loader.XmlConfigLoader;
-import ghosty.config.utils.ConfigMapList;
 import ghosty.files.Directory;
 import ghosty.utils.Parameters;
 import ghosty.utils.ParametersManager;
@@ -84,21 +79,21 @@ public class Main {
 					System.out.print(" (Laissez vide pour \"" + lastDirectory + "\") ");
 				}
 				System.out.println(": ");
-				
-				
+
+
 				directory = in.nextLine();
 				
 				if(directory.equals("") && lastDirectory != null) {
 					directory = lastDirectory;
 				}
-				
+
 			} while (directory == null);
-			
+
 			baseConfig.set("lastDirectory", directory);
-			
+
 			System.out.println("Directory: " + directory);
 			System.out.println("Config : " + baseConfig.get("lastDirectory"));
-			
+
 			baseConfig.save();
 
 		} catch (Exception e) {
