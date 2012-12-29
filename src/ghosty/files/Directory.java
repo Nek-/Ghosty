@@ -1,5 +1,6 @@
 package ghosty.files;
 
+import java.nio.file.Path;
 import java.util.LinkedList;
 
 /**
@@ -15,5 +16,9 @@ public class Directory {
 	
 	public LinkedList<String> getFiles () {
 		return new LinkedList<String>();
+	}
+	
+	public  boolean exists(Path path){
+		 return this.exists(path);
 	}
 }
