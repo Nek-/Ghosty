@@ -64,9 +64,9 @@ public class Directory {
 
 				if (!p.toString().equals(".ghosty")) {
 
-					if (Files.isDirectory(p))
+					if (Files.isDirectory(p) && !p.endsWith(".config"))
 						list.addAll(getFilesFromPath(p.toString()));
-					else
+					else if (!Files.isDirectory(p))
 						list.add(p);
 				}
 
