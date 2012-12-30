@@ -5,6 +5,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -42,15 +43,15 @@ public class Directory {
 	}
 	
 	/**
-	 * Return path of everyfiles in a directory
+	 * Return path of every files in a directory
 	 * 
 	 * @param path
 	 * @return
 	 * @throws IOException
 	 */
-	public static LinkedList<Path> getFilesFromPath(String path)  throws IOException {
+	public static ArrayList<Path> getFilesFromPath(String path)  throws IOException {
 		
-		LinkedList<Path> list = new LinkedList<Path>();
+		ArrayList<Path> list = new ArrayList<Path>();
 		Path jdkPath = Paths.get(path);
 		DirectoryStream<Path> stream = Files.newDirectoryStream(jdkPath);
 		try {
@@ -62,9 +63,11 @@ public class Directory {
 				Path p = iterator.next();
 
 				if (!p.toString().equals(".ghosty")) {
-					list.add(p);
+
 					if (Files.isDirectory(p))
-						getFilesFromPath(p.toString());
+						list.addAll(getFilesFromPath(p.toString()));
+					else
+						list.add(p);
 				}
 
 			}
