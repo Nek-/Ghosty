@@ -1,6 +1,7 @@
 package ghosty.config;
 
 import ghosty.config.loader.LoadException;
+import ghosty.files.Directory;
 
 public class ConfigFactory {
 	
@@ -9,6 +10,7 @@ public class ConfigFactory {
 	
 	public ConfigFactory (String mainFolder) {
 		this.mainFolder = mainFolder;
+		Directory.createDirectory(mainFolder + System.getProperty("file.separator") + this.configFolder);
 	}
 	
 	public Configuration getConfiguration(String file) throws LoadException {

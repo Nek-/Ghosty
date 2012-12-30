@@ -17,13 +17,21 @@ public class File {
 	/**
 	 * path of the file
 	 */
-	private String path;
+	private Path path;
 
 	/**
 	 * Construct a File manager
-	 * @param path
+	 * @param String path
 	 */
 	public File(String path) {
+		this.path = Paths.get(path);
+	}
+
+	/**
+	 * Construct a File manager
+	 * @param Path path
+	 */
+	public File(Path path) {
 		this.path = path;
 	}
 	
@@ -44,7 +52,7 @@ public class File {
 	 * @throws IOException 
 	 */
 	public byte[] getBytes() throws IOException {
-		byte[] array = Files.readAllBytes(FileSystems.getDefault().getPath(this.path));
+		byte[] array = Files.readAllBytes(this.path);
 
 		return array;
 	}
@@ -56,8 +64,7 @@ public class File {
 	 * @throws IOException 
 	 */
 	public InputStream getInputStream() throws IOException{
-		Path p = Paths.get(this.path);
-		InputStream in = Files.newInputStream(p);
+		InputStream in = Files.newInputStream(this.path);
 		return in;	
 	}
 
@@ -68,8 +75,7 @@ public class File {
 	 * @throws IOException
 	 */
 	public OutputStream getOutputStream() throws IOException{
-		Path p = Paths.get(this.path);
-		OutputStream out = Files.newOutputStream(p);
+		OutputStream out = Files.newOutputStream(this.path);
 		return out;
 	}
 }
