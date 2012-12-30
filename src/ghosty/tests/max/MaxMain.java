@@ -63,7 +63,7 @@ public class MaxMain {
 	private static void testMd5() {
 		// Test the md5 hash
 		String str = Checker.hash((new String("Coucou")).getBytes());
-		System.out.println(str); // Must return "41060d3ddfdf63e68fc2bf196f652ee9"
+		System.out.println("Hash de coucou : " + str); // Must return "41060d3ddfdf63e68fc2bf196f652ee9"
 		
 		// Test the md5 on a file list
 
@@ -74,7 +74,9 @@ public class MaxMain {
 					Arrays.copyOf(a.toArray(), a.size(), Path[].class),
 					new ConfigFactory("/home/nek/test")
 				);
-			
+			for(String s : str2) {
+				System.out.println(s);
+			}
 		} catch (LoadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
