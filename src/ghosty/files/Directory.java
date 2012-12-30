@@ -48,7 +48,7 @@ public class Directory {
 	 * @return
 	 * @throws IOException
 	 */
-	public LinkedList<Path> getFilesFromPath(String path)  throws IOException {
+	public static LinkedList<Path> getFilesFromPath(String path)  throws IOException {
 		
 		LinkedList<Path> list = new LinkedList<Path>();
 		Path jdkPath = Paths.get(path);
