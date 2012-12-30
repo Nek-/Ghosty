@@ -6,11 +6,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.drive.Drive.*;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.*;
@@ -54,8 +54,13 @@ public class Test {
     body.setMimeType(mimeType);
 
     // Set the parent folder.
-  
+ // Set the parent folder.
+    if (parentId != null && parentId.length() > 0) {
+      body.setParents(
+          Arrays.asList(new ParentReference().setId(parentId)));
+    }
 
+  
     // File's content.
     Path fileContent = Paths.get(filename);
     FileContent mediaContent = new FileContent(mimeType, fileContent.toFile());
@@ -63,7 +68,7 @@ public class Test {
       File file = service.files().insert(body, mediaContent).execute();
 
       // Uncomment the following line to print the File ID.
-       System.out.println("File ID: %s" + file.getId());
+       //System.out.println("File ID: %s" + file.getId());
 
       return file;
     } catch (IOException e) {
@@ -93,13 +98,17 @@ public class Test {
 	    body.setTitle(title);
 	    body.setDescription(description);
 	    body.setMimeType(mimeType);
-	    body.get(filename);
+	    //body.get(filename);
+	    
+	    /*if (parentId != null && parentId.length() > 0) {
+	        body.setParents(
+	            Arrays.asList(new ParentReference().setId(parentId)));
+	      }*/
 	    // File's content.
 	   
 	    try {
 	     File parent = service.files().insert(body).execute();
-	      // Uncomment the following line to print the File ID.
-	      // System.out.println("File ID: %s" + file.getId());
+	   System.out.println("File ID: %s" + parent.getId());
 
 	      return parent;
 	    } catch (IOException e) {
@@ -109,33 +118,58 @@ public class Test {
 	  }
   
   
+  private static boolean isFileInFolder(Drive service, String folderId,
+	      String fileId) throws IOException {
+	    try {
+	      service.parents().get(fileId, folderId).execute();
+	    } catch (HttpResponseException e) {
+	      if (e.getStatusCode() == 404) {
+	        return false;
+	      } else {
+	        System.out.println("An error occured: " + e);
+	        throw e;
+	      }
+	    } catch (IOException e) {
+	      System.out.println("An error occured: " + e);
+	      throw e;
+	    }
+	    return true;
+	  }
+  
   /**
    * Print a file's metadata.
    *
    * @param service Drive API service instance.
    * @param fileId ID of the file to print metadata for.
    */
-  private static void printFile(Drive service, String fileId) {
+  private static String getDirectory(Drive service, String title, String description,
+	      String parentId, String mimeType, String filename) {
+	    // File's metadata.
+	  File body = new File();
+	    body.setTitle(title);
+	    body.setDescription(description);
+	    body.setMimeType(mimeType);
+	    //body.get(filename);
+	    
+	    /*if (parentId != null && parentId.length() > 0) {
+	        body.setParents(
+	            Arrays.asList(new ParentReference().setId(parentId)));
+	      }*/
+	    // File's content.
+	   
+	    try {
+	     File parent = service.files().insert(body).execute();
+	   System.out.println("File ID: %s" + parent.getId());
 
-    try {
-      File file = service.files().get(fileId).execute();
-
-      System.out.println("Title: " + file.getTitle());
-      System.out.println("Description: " + file.getDescription());
-      System.out.println("MIME type: " + file.getMimeType());
-    } catch (IOException e) {
-      System.out.println("An error occured: " + e);
-    }
-  }
-
-  /**
-   * Download a file's content.
-   *
-   * @param service Drive API service instance.
-   * @param file Drive File instance.
-   * @return InputStream containing the file's content if successful,
-   *         {@code null} otherwise.
-   */
+	      return parent.getId();
+	    } catch (IOException e) {
+	      System.out.println("An error occured: " + e);
+	      return null;
+	    }
+	  }
+  
+  
+  
   private static InputStream downloadFile(Drive service, File file) {
     if (file.getDownloadUrl() != null && file.getDownloadUrl().length() > 0) {
       try {
@@ -180,13 +214,17 @@ public class Test {
 	    
 	    //Create a new authorized API client
 	    Drive service = new Drive.Builder(httpTransport, jsonFactory, credential).build();
-	  
-	  insertAll(service,path);
+	   
+	    File folder = insertDirectory(service,  path.getFileName().toString(), "description", null ,
+				  "application/vnd.google-apps.folder",path.toAbsolutePath().toString()); 
+	    insertAll(service,path,folder.getId());
 	  
   }
   
   
-  public static void insertAll(Drive service, Path path ) throws IOException{
+
+  
+  public static void insertAll(Drive service, Path path, String Id ) throws IOException{
 	 
 	  DirectoryStream<Path> stream = Files.newDirectoryStream(path);
 	  
@@ -199,12 +237,17 @@ public class Test {
 			  Path p = iterator.next();
 			 
 			 if ( Files.isDirectory(p)){
-				   insertDirectory(service,  p.getFileName().toString(), "description", null,  "application/vnd.google-apps.folder", p.getFileName().toString());
-				   insertAll(service, p);
+				 	
+					File folder = insertDirectory(service,  p.getFileName().toString(), "description", Id ,
+					 "application/vnd.google-apps.folder",p.toAbsolutePath().toString());  
+				   	insertFileIntoFolder(service, Id, folder.getId());
+				   	//insertAll(service, p, folder.getId());
 			 }
-			  else {
-				  System.out.println(p);
-				  insertDirectory(service, p.getFileName().toString(), "description", null,Files.probeContentType(path), p.getFileName().toString());
+			 
+		else {
+				  System.out.println(p.getFileName().toString() + Id);
+				 File file = insertFile(service, p.getFileName().toString(), "description", Id,Files.probeContentType(p),p.toAbsolutePath().toString());
+				 insertFileIntoFolder(service, Id, file.getId());
 			  }
 			
 		  }
@@ -219,6 +262,8 @@ public class Test {
   public static void main(String[] args) throws IOException{
 	  Path path = Paths.get("before_coding");
 	  sendtoDrive(path);
+	  System.out.println("Done");
+	  
   }
 
 }
