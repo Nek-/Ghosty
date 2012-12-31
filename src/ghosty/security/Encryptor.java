@@ -75,17 +75,6 @@ public class Encryptor {
 	 */
 	public byte[] crypt(byte[] content) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		
-		// Transform the bytes array on a BigInterger
-		// That's made because we need to do some mathematics process on the content
-		//BigInteger contentAsInteger = new BigInteger(content);
-		
-		// crypt the content with a RSA method
-		// using public and private keys
-		//BigInteger contentCrypted = contentAsInteger.modPow(
-		//	this.publicKey.getPublicExponent(),
-		//	this.publicKey.getModulus()
-		//);
-		//return contentCrypted.toByteArray();
 		
 		this.cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
 		
@@ -120,18 +109,6 @@ public class Encryptor {
 	
 	
 	public byte[] decrypt(byte[] content) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-/*
-		// Getting the content as integer
-		BigInteger contentAsInteger = new BigInteger(content);
-		
-		// Decrypt the message thanks to the private key
-		BigInteger decryptedContent = contentAsInteger.modPow(
-			this.privateKey.getPrivateExponent(),
-			this.privateKey.getModulus()
-		);
-		// getting the byte
-		return decryptedContent.toByteArray();
-*/
 		this.cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
 		
 		return this.cipher.doFinal(content);
