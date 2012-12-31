@@ -8,12 +8,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import ghosty.config.ConfigFactory;
 import ghosty.config.Configuration;
 import ghosty.config.MissingConfigurationException;
 import ghosty.config.loader.LoadException;
 import ghosty.config.saver.SaveException;
+import ghosty.config.utils.ConfigMapListIterator;
 import ghosty.files.FileFactory;
 
 /**
@@ -33,39 +36,67 @@ public class Checker {
 	 * @throws CheckException 
 	 * @throws SaveException 
 	 */
-	public static String[] check(Path[] files, ConfigFactory factory) throws LoadException, CheckException, SaveException {
+	public static HashMap<CheckType, String[]> check(Path[] files, ConfigFactory factory) throws LoadException, CheckException, SaveException {
+		HashMap<CheckType, String[]> map = new HashMap<CheckType, String[]>();
+		
 		ArrayList<String> changed = new ArrayList<String>();
+		ArrayList<String> deleted = new ArrayList<String>();
+		ArrayList<String> added = new ArrayList<String>();
+		
 		Configuration config = factory.getConfiguration(configFilename);
 		String hash = null;
 		String newHash = null;
 
 		for(int i=0; i < files.length; i++) {
+
+			try {
+				newHash = hash(FileFactory.getInstance().getFile(files[i]).getBytes());
+			} catch (IOException e1) {
+				throw new CheckException("Impossible to load the file \"" + files[i] + "\"");
+			}
+
 			try {
 				hash = config.get(files[i].toString());
 
 			} catch(MissingConfigurationException e) {
-				hash = "";
+				added.add(files[i].toString());
+				continue;
 			}
-			
-			try {
-				newHash = hash(FileFactory.getInstance().getFile(files[i]).getBytes());
-				changed.add(newHash);
-			} catch (IOException e) {
-				throw new CheckException("Impossible to load the file \"" + files[i] + "\"");
-			}
-			
+
 			if(!hash.equals(newHash)) {
 				config.set(files[i].toString(), newHash);
+				changed.add(newHash);
 			}
-			
+
 		}
 		
-		// TODO: Check for files to remove
-		// Probleme: impossible d'itérer sur des HashMap
+		map.put(CheckType.MODIFIED, Arrays.copyOf(changed.toArray(), changed.size(), String[].class));
+		map.put(CheckType.ADDED, Arrays.copyOf(added.toArray(), added.size(), String[].class));
+		
+		
+		ConfigMapListIterator it = (ConfigMapListIterator) config.iterator();
+		
+		String key;
+		boolean exists;
+		while(it.hasNext()) {
+			key = it.nextKey();
+			exists = false;
+			
+			for(int i = 0; !exists && i < files.length; i++) {
+				if(key.equals(files[i].toString())) {
+					exists = true;
+				}
+			}
+			if(!exists) {
+				deleted.add(key);
+			}
+		}
+		
+		map.put(CheckType.DELETED, Arrays.copyOf(deleted.toArray(), deleted.size(), String[].class));
 		
 		
 		config.save();
-		return Arrays.copyOf(changed.toArray(), changed.size(), String[].class);
+		return map;
 
 	}
 	
