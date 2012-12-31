@@ -241,7 +241,7 @@ public class Test {
 					File folder = insertDirectory(service,  p.getFileName().toString(), "description", Id ,
 					 "application/vnd.google-apps.folder",p.toAbsolutePath().toString());  
 				   	insertFileIntoFolder(service, Id, folder.getId());
-				   	//insertAll(service, p, folder.getId());
+				   	insertAll(service, p, folder.getId());
 			 }
 			 
 		else {
