@@ -110,7 +110,7 @@ public class Main {
 		
 		
 		// Watcher
-		System.out.println("Pour arrêter ce programme, tapez CTRL+C.");
+		System.out.println("Pour arrÃªter ce programme, tapez CTRL+C.");
 		launchWatcher(Paths.get(directory));
 
 
