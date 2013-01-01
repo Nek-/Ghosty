@@ -4,8 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -13,6 +15,8 @@ import java.security.interfaces.RSAPublicKey;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Hardcore part
@@ -81,30 +85,51 @@ public class Encryptor {
 		return this.cipher.doFinal(content);
 	}
 	
-	public byte[] cryptBigArray(byte[] content) {
-		byte[] output = new byte[content.length];
+	/**
+	 * Crypt a large byte array using a passkey
+	 * 
+	 * @param content
+	 * @param passkey
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchPaddingException
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 */
+	public byte[] cryptBigArray(byte[] content, byte[] passkey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		
-		byte[] tmp;
-		int i = 100;
 		
-		// TODO: pack of 100 bytes
-		for(byte c : content) {
-			if(i < 100) {
-				
-				
-				i++;
-			} else {
-				tmp = new byte[100];
-				i = 0;
-			}
-		}
-		
-		return output;
+		Key key = new SecretKeySpec(passkey,"Blowfish");
+		Cipher cipher=Cipher.getInstance("Blowfish");
+		cipher.init(Cipher.ENCRYPT_MODE,key);
+
+		return cipher.doFinal(content);
 	}
 	
-	// TODO: @see cryptBigArray
-	public byte[] decryptBigArray(byte[] content) {
-		return new byte[100];
+
+	/**
+	 * Decrypt a large byte array using a passkey
+	 * 
+	 * @param content
+	 * @param passkey
+	 * @return
+	 * @throws InvalidKeyException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchPaddingException
+	 */
+	public byte[] decryptBigArray(byte[] content, byte[] passkey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+		
+		//byte[] keyBytes = this.decrypt(passkey);
+		
+		
+		Key key = new SecretKeySpec(passkey,"Blowfish");
+		Cipher cipher=Cipher.getInstance("Blowfish");
+		cipher.init(Cipher.DECRYPT_MODE,key);
+		
+		return cipher.doFinal(content);
 	}
 	
 	
